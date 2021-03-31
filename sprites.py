@@ -34,6 +34,8 @@ class Player(pygame.sprite.Sprite):
         self.collide_with_walls('horizontal')
         self.rect.y += self.speedy
         self.collide_with_walls('vertical')
+        self.collide_with_finish()
+
 
     def collide_with_walls(self, direction):
         if direction == 'horizontal':
@@ -54,6 +56,11 @@ class Player(pygame.sprite.Sprite):
                     self.rect.y = hits[0].rect.bottom
                 self.speedy = 0
 
+    def collide_with_finish(self):
+        hits = pygame.sprite.spritecollide(self, self.game.finish, False)
+        if hits:
+            self.game.playing = False
+
 
 class Wall(pygame.sprite.Sprite):
     def __init__(self, game, x_spawn, y_spawn):
@@ -62,8 +69,24 @@ class Wall(pygame.sprite.Sprite):
 
         self.game = game
         self.image = pygame.Surface((CELL_SIZE, CELL_SIZE))
-        self.image.fill(SKYBLUE)
+        self.image.fill(BLACK)
         self.rect = self.image.get_rect()
 
         self.rect.x = x_spawn * CELL_SIZE
         self.rect.y = y_spawn * CELL_SIZE
+
+
+class Finish(pygame.sprite.Sprite):
+    def __init__(self, game, x_spawn, y_spawn):
+        self.groups = game.all_sprites, game.finish
+        pygame.sprite.Sprite.__init__(self, self.groups)
+
+        self.game = game
+        self.image = pygame.Surface((CELL_SIZE, CELL_SIZE))
+        self.image.fill(YELLOW)
+        self.rect = self.image.get_rect()
+
+        self.rect.x = x_spawn * CELL_SIZE
+        self.rect.y = y_spawn * CELL_SIZE
+
+

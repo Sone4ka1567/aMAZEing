@@ -59,6 +59,7 @@ def map_generator(width, height):  # ПЕРЕДАВАТЬ ЧЕТНЫЕ ЗНАЧ�
         elif len(stack) > 0:
             now = stack.pop()
 
+    maze[height - 1][width - 1] = 'F'
     with open('bigmap.txt', 'w') as f:
         for i in range(len(maze)):
             s = ''

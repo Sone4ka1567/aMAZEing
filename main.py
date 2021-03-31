@@ -23,12 +23,16 @@ class Game:
     def new(self):
         self.all_sprites = pygame.sprite.Group()
         self.walls = pygame.sprite.Group()
+        self.finish = pygame.sprite.Group()
         for row, cells in enumerate(self.map.data):
             for col, cell in enumerate(cells):
                 if cell == '1':
                     Wall(self, col, row)
                 if cell == 'S':
                     self.player = Player(self, col, row)
+                if cell == 'F':
+                    Finish(self, col, row)
+
         self.camera = Camera(self.map.width, self.map.height)
 
     def run(self):
@@ -48,9 +52,9 @@ class Game:
 
     def draw_grid(self):
         for x in range(0, WIDTH, CELL_SIZE):
-            pygame.draw.line(self.screen, LIGHTGREY, (x, 0), (x, HEIGHT))
+            pygame.draw.line(self.screen, DARKBLUE, (x, 0), (x, HEIGHT))
         for y in range(0, HEIGHT, CELL_SIZE):
-            pygame.draw.line(self.screen, LIGHTGREY, (0, y), (WIDTH, y))
+            pygame.draw.line(self.screen, DARKBLUE, (0, y), (WIDTH, y))
 
     def draw(self):
         self.screen.fill(BACKGROUND_COLOR)
@@ -71,11 +75,10 @@ class Game:
     def show_go_screen(self):
         pass
 
-# create the game object
+
 game = Game()
 game.show_start_screen()
-while True:
-    game.new()
-    game.run()
-    game.show_go_screen()
+game.new()
+game.run()
+game.show_go_screen()
 
