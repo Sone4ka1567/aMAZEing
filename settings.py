@@ -1,3 +1,8 @@
+from tkinter import Tk
+
+
+root = Tk()
+
 # colors
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
@@ -10,8 +15,8 @@ SKYBLUE = (135, 206, 235)
 ORCHID = (218, 112, 214)
 
 # game settings
-WIDTH = 1024
-HEIGHT = 768
+WIDTH = root.winfo_screenwidth()
+HEIGHT = root.winfo_screenheight()
 FPS = 60
 TITLE = "aMAZEing"
 BACKGROUND_COLOR = BLACK
@@ -19,4 +24,4 @@ CELL_SIZE = 32
 GRID_WIDTH = WIDTH / CELL_SIZE
 GRID_HEIGHT = HEIGHT / CELL_SIZE
 
-PLAYER_SPEED = 6
+PLAYER_SPEED = 4

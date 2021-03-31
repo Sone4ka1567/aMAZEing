@@ -4,6 +4,7 @@ from settings import *
 from map import *
 from sprites import *
 from camera import *
+from map_generator import *
 
 
 class Game:
@@ -16,6 +17,7 @@ class Game:
 
     def load_map(self):
         folder = path.dirname(__file__)
+        map_generator(64, 64)
         self.map = Map(path.join(folder, 'bigmap.txt'))
 
     def new(self):
