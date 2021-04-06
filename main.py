@@ -19,7 +19,7 @@ class Game:
     def load_map(self):
         folder = path.dirname(__file__)
         if self.make_me_a_map:  # Если False, то надо подгрузить самому
-            map_generator(64, 64)
+            map_generator(self.difficulty, self.difficulty)
         self.map = Map(path.join(folder, 'map.txt'))
 
     def new(self):
@@ -86,27 +86,38 @@ class Game:
                 elif level == 2:
                     self.make_me_a_map = True
                     self.choose_screen_playing = False
+                elif level == 'easy':
+                    self.difficulty = 64
+                    self.choose_dif_playing = False
+                elif level == 'medium':
+                    self.difficulty = 110
+                    self.choose_dif_playing = False
+                elif level == 'hardcore':
+                    self.difficulty = 180
+                    self.choose_dif_playing = False
+                elif level == 'instruction':
+                    self.instruction_playing = False
 
         else:
             pygame.draw.rect(self.screen, defaultcolor, (x, y, width, height))
 
-        self.start_button_text = self.small_font.render(message, True, BLACK)
-        self.screen.blit(self.start_button_text, (x + 38, y + 15))
+        self.button_text = self.small_font.render(message, True, BLACK)
+        self.screen.blit(self.button_text, (x + (width - self.button_text.get_width()) / 2, y + (height - self.button_text.get_height()) / 2))
 
-
-    def show_start_screen(self): 
-        self.font = pygame.font.SysFont("comicsansms", 80)
-        self.small_font = pygame.font.SysFont("comicsansms", 40)
-        self.start_text = self.font.render("aMAZEing", True, ORCHID)
+    def show_start_screen(self):
+        self.big_font = pygame.font.SysFont("comicsansms", 200)
+        self.font = pygame.font.SysFont("comicsansms", 100)
+        self.small_font = pygame.font.SysFont("comicsansms", 50)
+        self.start_text = self.big_font.render("aMAZEing", True, ORCHID)
         self.start_screen_playing = True
 
         while self.start_screen_playing:
             self.screen.fill(BACKGROUND_COLOR)
-            self.screen.blit(self.start_text, ((WIDTH - self.start_text.get_width()) / 2, 0))
+            self.screen.blit(self.start_text, ((WIDTH - self.start_text.get_width()) / 2, 60))
 
-            self.create_button("LET'S GO", (WIDTH - 200) / 2, (HEIGHT - 50) / 2, 200, 50, WHITE, LIGHTGREY, 0)
+            self.create_button("LET'S GO", WIDTH / 2 - 150, HEIGHT / 2, 300, 100, WHITE, LIGHTPURPLE, 0)
 
-            self.events()  # мб заменить придётся
+            self.events()
 
             pygame.display.update()
             self.clock.tick(FPS)
@@ -117,24 +128,75 @@ class Game:
 
         while self.choose_screen_playing:
             self.screen.fill(BACKGROUND_COLOR)
-            self.screen.blit(self.choose_a_map_text, ((WIDTH - self.choose_a_map_text.get_width()) / 2, 0))
+            self.screen.blit(self.choose_a_map_text, ((WIDTH - self.choose_a_map_text.get_width()) / 2, 60))
 
-            self.create_button("Download my map", 100, (HEIGHT - 50) / 2, 300, 100, WHITE, LIGHTGREY, 1)
+            self.create_button("Download my map", 50, HEIGHT / 2, 350, 100, WHITE, LIGHTPURPLE, 1)
 
-            self.create_button("Make me a map", WIDTH - 400, (HEIGHT - 50) / 2, 300, 100, WHITE, LIGHTGREY, 2)
+            self.create_button("Make me a map", WIDTH - 400, HEIGHT / 2, 350, 100, WHITE, LIGHTPURPLE, 2)
 
-            self.events()  # мб заменить придётся
+            self.events()
 
             pygame.display.update()
             self.clock.tick(FPS)
 
-    def show_go_screen(self):  #TODO
+    def instruction_download(self):
+        self.instruction_text1 = self.small_font.render("Add your map as map.txt file.", True, ORCHID)
+        self.instruction_text2 = self.small_font.render("Make sure, that the file consists", True, ORCHID)
+        self.instruction_text3 = self.small_font.render("only of the next symbols:", True, ORCHID)
+        self.instruction_text4 = self.small_font.render("1 - stands for a wall", True, ORCHID)
+        self.instruction_text5 = self.small_font.render(". - stands for a cell", True, ORCHID)
+        self.instruction_text6 = self.small_font.render("S - stands for start position", True, ORCHID)
+        self.instruction_text7 = self.small_font.render("F - stands for finish", True, ORCHID)
+
+        self.instruction_playing = True
+
+        while self.instruction_playing:
+            self.screen.fill(BACKGROUND_COLOR)
+            self.screen.blit(self.instruction_text1, ((WIDTH - self.instruction_text1.get_width()) / 2, 20))
+            self.screen.blit(self.instruction_text2, ((WIDTH - self.instruction_text2.get_width()) / 2, 60))
+            self.screen.blit(self.instruction_text3, ((WIDTH - self.instruction_text3.get_width()) / 2, 100))
+            self.screen.blit(self.instruction_text4, ((WIDTH - self.instruction_text4.get_width()) / 2, 140))
+            self.screen.blit(self.instruction_text5, ((WIDTH - self.instruction_text5.get_width()) / 2, 180))
+            self.screen.blit(self.instruction_text6, ((WIDTH - self.instruction_text6.get_width()) / 2, 220))
+            self.screen.blit(self.instruction_text7, ((WIDTH - self.instruction_text7.get_width()) / 2, 260))
+
+            self.create_button("Done", WIDTH / 2 - 150, HEIGHT - 300, 300, 100, WHITE, LIGHTPURPLE, 'instruction')
+
+            self.events()
+
+            pygame.display.update()
+            self.clock.tick(FPS)
+
+    def choose_difficulty(self):
+        self.choose_dif_text = self.font.render("Choose difficulty", True, ORCHID)
+        self.choose_dif_playing = True
+
+        while self.choose_dif_playing:
+            self.screen.fill(BACKGROUND_COLOR)
+            self.screen.blit(self.choose_dif_text, ((WIDTH - self.choose_dif_text.get_width()) / 2, 100))
+
+            self.create_button("EASY", 100, HEIGHT / 2 + 100, 250, 100, WHITE, LIGHTPURPLE, 'easy')
+
+            self.create_button("MEDIUM", WIDTH / 2 - 125, HEIGHT / 2 + 100, 250, 100, WHITE, LIGHTPURPLE, 'medium')
+
+            self.create_button("HARDCORE", WIDTH - 350, HEIGHT / 2 + 100, 250, 100, WHITE, LIGHTPURPLE, 'hardcore')
+
+            self.events()
+
+            pygame.display.update()
+            self.clock.tick(FPS)
+
+    def show_go_screen(self):
         pass
 
 
 game = Game()
 game.show_start_screen()
 game.choose_map()
+if game.make_me_a_map:
+    game.choose_difficulty()
+else:
+    game.instruction_download()
 game.new()
 game.run()
 game.show_go_screen()
