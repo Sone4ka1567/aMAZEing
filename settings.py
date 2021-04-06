@@ -16,8 +16,8 @@ ORCHID = (218, 112, 214)
 DARKBLUE = (0, 153, 153)
 
 # game settings
-WIDTH = root.winfo_screenwidth()
-HEIGHT = root.winfo_screenheight() - 100
+WIDTH = 1024  # root.winfo_screenwidth()
+HEIGHT = 768  # root.winfo_screenheight()
 FPS = 60
 TITLE = "aMAZEing"
 BACKGROUND_COLOR = SKYBLUE

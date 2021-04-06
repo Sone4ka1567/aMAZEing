@@ -4,13 +4,17 @@ import random
 
 def get_neighbours(i_pos, j_pos, maze, types):
     nei = []
-    if i_pos > 1 and maze[i_pos - 2][j_pos] == '1' and types[i_pos - 2][j_pos] == 'CELL':  # сверху
+    if i_pos > 1 and maze[i_pos - 2][j_pos] == '1' \
+            and types[i_pos - 2][j_pos] == 'CELL':  # сверху
         nei.append((i_pos - 2, j_pos, 'up'))
-    if i_pos < (len(maze) - 2) and maze[i_pos + 2][j_pos] == '1' and types[i_pos + 2][j_pos] == 'CELL':  # снизу
+    if i_pos < (len(maze) - 2) and maze[i_pos + 2][j_pos] == '1' \
+            and types[i_pos + 2][j_pos] == 'CELL':  # снизу
         nei.append((i_pos + 2, j_pos, 'down'))
-    if j_pos > 1 and maze[i_pos][j_pos - 2] == '1' and types[i_pos][j_pos - 2] == 'CELL':  # слева
+    if j_pos > 1 and maze[i_pos][j_pos - 2] == '1' \
+            and types[i_pos][j_pos - 2] == 'CELL':  # слева
         nei.append((i_pos, j_pos - 2, 'left'))
-    if j_pos < (len(maze[0]) - 2) and maze[i_pos][j_pos + 2] == '1' and types[i_pos][j_pos + 2] == 'CELL':  # справа
+    if j_pos < (len(maze[0]) - 2) and maze[i_pos][j_pos + 2] == '1'\
+            and types[i_pos][j_pos + 2] == 'CELL':  # справа
         nei.append((i_pos, j_pos + 2, 'right'))
     return nei
 

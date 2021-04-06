@@ -1,10 +1,12 @@
 import pygame
+import sys
 from os import path
 from settings import *
-from map import *
-from sprites import *
-from camera import *
-from map_generator import *
+from map import Map
+from sprites import Player, Wall, Finish
+from camera import Camera
+from map_generator import map_generator
+
 
 
 class Game:
@@ -45,6 +47,7 @@ class Game:
 
     def quit(self):
         pygame.quit()
+        sys.exit()
 
     def update(self):
         self.all_sprites.update()
@@ -69,10 +72,41 @@ class Game:
             if event.type == pygame.QUIT:
                 self.quit()
 
-    def show_start_screen(self):
+    def create_button(self, message, x, y, width, height, hovercolor, defaultcolor):
+        mouse = pygame.mouse.get_pos()
+        click = pygame.mouse.get_pressed(3)
+        if x + width > mouse[0] > x and y + height > mouse[1] > y:
+            pygame.draw.rect(self.screen, hovercolor, (x, y, width, height))
+            if click[0] == 1:
+                self.start_screen_playing = False
+        else:
+            pygame.draw.rect(self.screen, defaultcolor, (x, y, width, height))
+
+        self.start_button_text = self.small_font.render(message, True, BLACK)
+        self.screen.blit(self.start_button_text, (x + 38, y + 15))
+
+    def first_level(self):  #TODO
         pass
 
-    def show_go_screen(self):
+    def show_start_screen(self): 
+        self.font = pygame.font.SysFont("comicsansms", 80)
+        self.small_font = pygame.font.SysFont("comicsansms", 40)
+        self.start_text = self.font.render("aMAZEing", True, ORCHID)
+        self.start_screen_playing = True
+
+        while self.start_screen_playing:
+            self.screen.fill(BACKGROUND_COLOR)
+            self.screen.blit(self.start_text, ((WIDTH - self.start_text.get_width()) / 2, 0))
+
+            self.create_button("LET'S GO", (WIDTH - 200) / 2, (HEIGHT - 50) / 2, 200, 50, WHITE, LIGHTGREY)
+
+            self.events()  # мб заменить придётся
+
+            pygame.display.update()
+            self.clock.tick(FPS)
+
+
+    def show_go_screen(self):  #TODO
         pass
 
 

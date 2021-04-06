@@ -36,25 +36,22 @@ class Player(pygame.sprite.Sprite):
         self.collide_with_walls('vertical')
         self.collide_with_finish()
 
-
     def collide_with_walls(self, direction):
-        if direction == 'horizontal':
-            hits = pygame.sprite.spritecollide(self, self.game.walls, False)
-            if hits:
-                if self.speedx > 0:
-                    self.rect.x = hits[0].rect.left - self.rect.width
-                if self.speedx < 0:
-                    self.rect.x = hits[0].rect.right
-                self.speedx = 0
+        hits = pygame.sprite.spritecollide(self, self.game.walls, False)
+        if hits:
+            if direction == 'horizontal':
+                    if self.speedx > 0:
+                        self.rect.x = hits[0].rect.left - self.rect.width
+                    if self.speedx < 0:
+                        self.rect.x = hits[0].rect.right
+                    self.speedx = 0
 
-        if direction == 'vertical':
-            hits = pygame.sprite.spritecollide(self, self.game.walls, False)
-            if hits:
-                if self.speedy > 0:
-                    self.rect.y = hits[0].rect.top - self.rect.height
-                if self.speedy < 0:
-                    self.rect.y = hits[0].rect.bottom
-                self.speedy = 0
+            if direction == 'vertical':
+                    if self.speedy > 0:
+                        self.rect.y = hits[0].rect.top - self.rect.height
+                    if self.speedy < 0:
+                        self.rect.y = hits[0].rect.bottom
+                    self.speedy = 0
 
     def collide_with_finish(self):
         hits = pygame.sprite.spritecollide(self, self.game.finish, False)
