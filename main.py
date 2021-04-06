@@ -8,7 +8,6 @@ from camera import Camera
 from map_generator import map_generator
 
 
-
 class Game:
     def __init__(self):
         pygame.init()
