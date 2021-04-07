@@ -96,6 +96,8 @@ class Game:
                     self.choose_dif_playing = False
                 elif level == 'instruction':
                     self.instruction_playing = False
+                elif level == 'bye':
+                    self.quit()
 
         else:
             pygame.draw.rect(self.screen, defaultcolor, (x, y, width, height))
@@ -186,7 +188,19 @@ class Game:
             self.clock.tick(FPS)
 
     def show_go_screen(self):
-        pass
+        self.go_text = self.font.render("YOU ARE AWESOME!!!", True, ORCHID)
+        self.go_playing = True
+
+        while self.go_playing:
+            self.screen.fill(BLACK)
+            self.screen.blit(self.go_text, ((WIDTH - self.go_text.get_width()) / 2, 250))
+
+            self.create_button("I'M AWESOME!!", WIDTH / 2 - 200, HEIGHT / 2 + 75, 400, 100, WHITE, LIGHTPURPLE, 'bye')
+
+            self.events()
+
+            pygame.display.update()
+            self.clock.tick(FPS)
 
 
 game = Game()
