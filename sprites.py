@@ -94,7 +94,7 @@ class SolutionCell(pygame.sprite.Sprite):
 
         self.game = game
         self.image = pygame.Surface((const.CELL_SIZE, const.CELL_SIZE))
-        self.image.fill(const.DARKBLUE)
+        self.image.fill(const.LIGHTPURPLE)
         self.rect = self.image.get_rect()
 
         self.rect.x = x_spawn * const.CELL_SIZE

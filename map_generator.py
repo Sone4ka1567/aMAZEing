@@ -79,8 +79,8 @@ def map_generator(width, height):  # ПЕРЕДАВАТЬ ЧЕТНЫЕ ЗНАЧ�
         elif len(stack) > 0:
             now = stack.pop()
 
-    used = [[0 for _ in range(len(maze[0]))] for __ in range(len(maze))]
-    ans = solution_generator(maze, used)
+    trace = [[0 for _ in range(len(maze[0]))] for __ in range(len(maze))]
+    ans = solution_generator(maze, trace)
     maze[height - 1][width - 1] = 'F'
     with open('map.txt', 'w') as f:
         for i in range(len(maze)):
@@ -93,7 +93,9 @@ def map_generator(width, height):  # ПЕРЕДАВАТЬ ЧЕТНЫЕ ЗНАЧ�
     return ans
 
 
-def solution_generator(maze, used):
+def solution_generator(maze, trace):
+    trace[1][1] = 1
+    used = [[0 for _ in range(len(maze[0]))] for __ in range(len(maze))]
     used[1][1] = 1
     now = (1, 1)
     end = (len(maze) - 2, len(maze[0]) - 2)
@@ -106,20 +108,39 @@ def solution_generator(maze, used):
             ind = random.randint(0, len(nei) - 1)
             next_cell = nei[ind]
             if next_cell[2] == 'up':
+                trace[now[0] - 1][next_cell[1]] = 1
+                trace[next_cell[0]][next_cell[1]] = 1
                 used[now[0] - 1][next_cell[1]] = 1
                 used[next_cell[0]][next_cell[1]] = 1
             if next_cell[2] == 'down':
+                trace[now[0] + 1][next_cell[1]] = 1
+                trace[next_cell[0]][next_cell[1]] = 1
                 used[now[0] + 1][next_cell[1]] = 1
                 used[next_cell[0]][next_cell[1]] = 1
             if next_cell[2] == 'left':
+                trace[next_cell[0]][now[1] - 1] = 1
+                trace[next_cell[0]][next_cell[1]] = 1
                 used[next_cell[0]][now[1] - 1] = 1
                 used[next_cell[0]][next_cell[1]] = 1
             if next_cell[2] == 'right':
+                trace[next_cell[0]][now[1] + 1] = 1
+                trace[next_cell[0]][next_cell[1]] = 1
                 used[next_cell[0]][now[1] + 1] = 1
                 used[next_cell[0]][next_cell[1]] = 1
             now = (next_cell[0], next_cell[1])
         elif len(stack) > 0:
-            now = stack.pop()
-    return used
+            trace[now[0]][now[1]] = 0
+            prev_cell = stack.pop()
+            if now[0] + 2 == prev_cell[0]:  # пришли снизу
+                trace[now[0] + 1][now[1]] = 0
+            elif now[0] - 2 == prev_cell[0]:  # пришли сверху
+                trace[now[0] - 1][now[1]] = 0
+            elif now[1] + 2 == prev_cell[1]:  # пришли справа
+                trace[now[0]][now[1] + 1] = 0
+            elif now[1] - 2 == prev_cell[1]:  # пришли слева
+                trace[now[0]][now[1] - 1] = 0
+
+            now = prev_cell
+    return trace
 
 
