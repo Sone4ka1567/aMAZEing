@@ -87,3 +87,15 @@ class Finish(pygame.sprite.Sprite):
         self.rect.y = y_spawn * const.CELL_SIZE
 
 
+class SolutionCell(pygame.sprite.Sprite):
+    def __init__(self, game, x_spawn, y_spawn):
+        self.groups = game.all_sprites, game.solution_path
+        pygame.sprite.Sprite.__init__(self, self.groups)
+
+        self.game = game
+        self.image = pygame.Surface((const.CELL_SIZE, const.CELL_SIZE))
+        self.image.fill(const.DARKBLUE)
+        self.rect = self.image.get_rect()
+
+        self.rect.x = x_spawn * const.CELL_SIZE
+        self.rect.y = y_spawn * const.CELL_SIZE

@@ -3,7 +3,7 @@ import sys
 from os import path
 import settings as const
 from map import Map
-from sprites import Player, Wall, Finish
+from sprites import Player, Wall, Finish, SolutionCell
 from camera import Camera
 from map_generator import map_generator
 
@@ -15,10 +15,21 @@ class Game:
         pygame.display.set_caption(const.TITLE)
         self.clock = pygame.time.Clock()
 
+        self.go_playing = False
+        self.choose_dif_playing = False
+        self.solution_playing = False
+        self.instruction_playing = False
+        self.choose_screen_playing = False
+        self.start_screen_playing = False
+        self.go_playing = False
+
+        self.solution = False
+        self.solution_data = []
+
     def load_map(self):
         folder = path.dirname(__file__)
         if self.make_me_a_map:  # Если False, то надо подгрузить самому
-            map_generator(self.difficulty, self.difficulty)
+            self.solution_data = map_generator(self.difficulty, self.difficulty)
         self.map = Map(path.join(folder, 'map.txt'))
 
     def new(self):
@@ -26,6 +37,14 @@ class Game:
         self.all_sprites = pygame.sprite.Group()
         self.walls = pygame.sprite.Group()
         self.finish = pygame.sprite.Group()
+
+        if self.solution:
+            self.solution_path = pygame.sprite.Group()
+            for i in range(len(self.solution_data)):
+                for j in range(len(self.solution_data[0])):
+                    if self.solution_data[i][j] == 1:
+                        SolutionCell(self, j, i)
+
         for row, cells in enumerate(self.map.data):
             for col, cell in enumerate(cells):
                 if cell == '1':
@@ -76,31 +95,37 @@ class Game:
     def create_button(self, message, x, y, width, height,
                       hovercolor, defaultcolor, level):
         mouse = pygame.mouse.get_pos()
-        click = pygame.mouse.get_pressed(3)
         if x + width > mouse[0] > x and y + height > mouse[1] > y:
             pygame.draw.rect(self.screen, hovercolor, (x, y, width, height))
-            if click[0] == 1:
-                if level == 0:
-                    self.start_screen_playing = False
-                elif level == 1:
-                    self.make_me_a_map = False
-                    self.choose_screen_playing = False
-                elif level == 2:
-                    self.make_me_a_map = True
-                    self.choose_screen_playing = False
-                elif level == 'easy':
-                    self.difficulty = 50
-                    self.choose_dif_playing = False
-                elif level == 'medium':
-                    self.difficulty = 100
-                    self.choose_dif_playing = False
-                elif level == 'hardcore':
-                    self.difficulty = 150
-                    self.choose_dif_playing = False
-                elif level == 'instruction':
-                    self.instruction_playing = False
-                elif level == 'bye':
-                    self.quit()
+            for event in pygame.event.get():
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    if level == 0:
+                        self.start_screen_playing = False
+                    elif level == 1:
+                        self.make_me_a_map = False
+                        self.choose_screen_playing = False
+                    elif level == 2:
+                        self.make_me_a_map = True
+                        self.choose_screen_playing = False
+                    elif level == 'easy':
+                        self.difficulty = 50
+                        self.choose_dif_playing = False
+                    elif level == 'medium':
+                        self.difficulty = 100
+                        self.choose_dif_playing = False
+                    elif level == 'hardcore':
+                        self.difficulty = 150
+                        self.choose_dif_playing = False
+                    elif level == 'instruction':
+                        self.instruction_playing = False
+                    elif level == 'need solution':
+                        self.solution = True
+                        self.solution_playing = False
+                    elif level == 'no solution':
+                        self.solution = False
+                        self.solution_playing = False
+                    elif level == 'bye':
+                        self.quit()
 
         else:
             pygame.draw.rect(self.screen, defaultcolor, (x, y, width, height))
@@ -119,9 +144,9 @@ class Game:
         while self.start_screen_playing:
             self.screen.fill(const.BACKGROUND_COLOR)
             self.screen.blit(self.start_text,
-                             ((const.WIDTH - self.start_text.get_width()) / 2, 60))
+                             ((const.WIDTH - self.start_text.get_width()) / 2, 100))
 
-            self.create_button("LET'S GO", const.WIDTH / 2 - 150, const.HEIGHT / 2,
+            self.create_button("LET'S GO", const.WIDTH / 2 - 150, const.HEIGHT / 2 + 100,
                                300, 100, const.WHITE, const.LIGHTPURPLE, 0)
 
             self.events()
@@ -138,7 +163,7 @@ class Game:
         while self.choose_screen_playing:
             self.screen.fill(const.BACKGROUND_COLOR)
             self.screen.blit(self.choose_a_map_text,
-                             ((const.WIDTH - self.choose_a_map_text.get_width()) / 2, 60))
+                             ((const.WIDTH - self.choose_a_map_text.get_width()) / 2, 100))
 
             self.create_button("Download my map", 50, const.HEIGHT / 2,
                                350, 100, const.WHITE, const.LIGHTPURPLE, 1)
@@ -212,19 +237,39 @@ class Game:
             self.screen.blit(self.choose_dif_text,
                              ((const.WIDTH - self.choose_dif_text.get_width()) / 2, 100))
 
-            self.create_button("EASY", 100, const.HEIGHT / 2 + 100,
+            self.create_button("EASY", 100, const.HEIGHT / 2,
                                250, 100, const.WHITE, const.LIGHTPURPLE, 'easy')
 
             self.create_button("MEDIUM", const.WIDTH / 2 - 125,
-                               const.HEIGHT / 2 + 100, 250, 100, const.WHITE, const.LIGHTPURPLE, 'medium')
+                               const.HEIGHT / 2, 250, 100, const.WHITE, const.LIGHTPURPLE, 'medium')
 
             self.create_button("HARDCORE", const.WIDTH - 350,
-                               const.HEIGHT / 2 + 100, 250, 100, const.WHITE, const.LIGHTPURPLE, 'hardcore')
+                               const.HEIGHT / 2, 250, 100, const.WHITE, const.LIGHTPURPLE, 'hardcore')
 
             self.events()
 
             pygame.display.update()
             self.clock.tick(const.FPS)
+
+    def solution_screen(self):
+        self.solution_text = self.font.render(
+            "Do you need solution?", True, const.ORCHID
+        )
+        self.solution_playing = True
+        while self.solution_playing:
+            self.screen.fill(const.BACKGROUND_COLOR)
+            self.screen.blit(self.solution_text,
+                             ((const.WIDTH - self.solution_text.get_width()) / 2, 100))
+            self.create_button("Yeah", 200, const.HEIGHT / 2,
+                               200, 100, const.WHITE, const.LIGHTPURPLE, 'need solution')
+
+            self.create_button("Nope", const.WIDTH - 400,
+                               const.HEIGHT / 2, 200, 100, const.WHITE, const.LIGHTPURPLE, 'no solution')
+            self.events()
+
+            pygame.display.update()
+            self.clock.tick(const.FPS)
+
 
     def show_go_screen(self):
         self.go_text = self.font.render(
@@ -253,6 +298,7 @@ if game.make_me_a_map:
     game.choose_difficulty()
 else:
     game.instruction_download()
+game.solution_screen()
 game.new()
 game.run()
 game.show_go_screen()
