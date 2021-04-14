@@ -23,12 +23,12 @@ def map_generator(width, height):  # ПЕРЕДАВАТЬ ЧЕТНЫЕ ЗНАЧ�
     maze = []  # изначально заполним все единичками
     types = []
     not_visited = set()
-    for i in range(height + 1):  # клетки [0][j],[height][j],[i][0],[i][width] - стены стопроцентные
+    for i in range(height + 1):
         line = []
         t = []
         for j in range(width + 1):
             line.append('1')
-            if i == 0 or i == height or j == 0 or j == width:  # не трогаем границы карты
+            if i == 0 or i == height or j == 0 or j == width:
                 t.append('WALL')
             elif i % 2 == 0 or j % 2 == 0:
                 t.append('WALL')
