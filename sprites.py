@@ -1,4 +1,4 @@
-from settings import *
+import settings as const
 import pygame
 
 
@@ -8,11 +8,11 @@ class Player(pygame.sprite.Sprite):
         pygame.sprite.Sprite.__init__(self, self.groups)
 
         self.game = game
-        self.image = pygame.Surface((CELL_SIZE, CELL_SIZE))
-        self.image.fill(ORCHID)
+        self.image = pygame.Surface((const.CELL_SIZE, const.CELL_SIZE))
+        self.image.fill(const.ORCHID)
         self.rect = self.image.get_rect()
-        self.rect.x = x_spawn * CELL_SIZE
-        self.rect.y = y_spawn * CELL_SIZE
+        self.rect.x = x_spawn * const.CELL_SIZE
+        self.rect.y = y_spawn * const.CELL_SIZE
 
         self.speedx = 0
         self.speedy = 0
@@ -22,13 +22,13 @@ class Player(pygame.sprite.Sprite):
         self.speedy = 0
         key_state = pygame.key.get_pressed()
         if key_state[pygame.K_LEFT] or key_state[pygame.K_a]:
-            self.speedx = -PLAYER_SPEED
+            self.speedx = -const.PLAYER_SPEED
         if key_state[pygame.K_RIGHT] or key_state[pygame.K_d]:
-            self.speedx = PLAYER_SPEED
+            self.speedx = const.PLAYER_SPEED
         if key_state[pygame.K_UP] or key_state[pygame.K_w]:
-            self.speedy = -PLAYER_SPEED
+            self.speedy = -const.PLAYER_SPEED
         if key_state[pygame.K_DOWN] or key_state[pygame.K_s]:
-            self.speedy = PLAYER_SPEED
+            self.speedy = const.PLAYER_SPEED
 
         self.rect.x += self.speedx
         self.collide_with_walls('horizontal')
@@ -65,12 +65,12 @@ class Wall(pygame.sprite.Sprite):
         pygame.sprite.Sprite.__init__(self, self.groups)
 
         self.game = game
-        self.image = pygame.Surface((CELL_SIZE, CELL_SIZE))
-        self.image.fill(BLACK)
+        self.image = pygame.Surface((const.CELL_SIZE, const.CELL_SIZE))
+        self.image.fill(const.BLACK)
         self.rect = self.image.get_rect()
 
-        self.rect.x = x_spawn * CELL_SIZE
-        self.rect.y = y_spawn * CELL_SIZE
+        self.rect.x = x_spawn * const.CELL_SIZE
+        self.rect.y = y_spawn * const.CELL_SIZE
 
 
 class Finish(pygame.sprite.Sprite):
@@ -79,11 +79,11 @@ class Finish(pygame.sprite.Sprite):
         pygame.sprite.Sprite.__init__(self, self.groups)
 
         self.game = game
-        self.image = pygame.Surface((CELL_SIZE, CELL_SIZE))
-        self.image.fill(YELLOW)
+        self.image = pygame.Surface((const.CELL_SIZE, const.CELL_SIZE))
+        self.image.fill(const.YELLOW)
         self.rect = self.image.get_rect()
 
-        self.rect.x = x_spawn * CELL_SIZE
-        self.rect.y = y_spawn * CELL_SIZE
+        self.rect.x = x_spawn * const.CELL_SIZE
+        self.rect.y = y_spawn * const.CELL_SIZE
 
 

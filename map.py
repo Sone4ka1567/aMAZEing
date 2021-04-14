@@ -1,4 +1,4 @@
-from settings import *
+import settings as const
 
 class Map:
     def __init__(self, file):  # подгружать карту будем из текстового файла
@@ -9,8 +9,8 @@ class Map:
 
         self.cell_width = len(self.data[0])
         self.cell_height = len(self.data)
-        self.width = self.cell_width * CELL_SIZE
-        self.height = self.cell_height * CELL_SIZE
+        self.width = self.cell_width * const.CELL_SIZE
+        self.height = self.cell_height * const.CELL_SIZE
 
 
 
